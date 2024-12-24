@@ -12,4 +12,15 @@ public class AppContext {
 		return g;
 	}
 	
+	@Bean
+	public Person person() {
+		return new Person("김철수", 20);
+	}
+	
 }
+
+
+
+
+
+

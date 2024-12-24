@@ -20,6 +20,14 @@ public class TestMain {
 		//g1과 g2가 정말 같은 객체인지 한번 증명
 		System.out.println(g1 == g2);
 		
+		Person p1 = ctx.getBean("person",Person.class);
+		Person p2 = (Person) ctx.getBean("person");
+		
+		System.out.println(p1);
+		System.out.println(p2);
+		
+//		Person p3 = (Person) ctx.getBean("greeter");
+		
 	}
 
 }
