@@ -11,4 +11,15 @@ public class MainController {
 		return "login";
 	}
 	
+	@GetMapping("/registerView.do")
+	public String registerView() {
+		return "member_register";
+	}
+	
 }
+
+
+
+
+
+
