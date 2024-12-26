@@ -88,4 +88,17 @@ public class MainController {
 		view.setViewName("register_result");
 		return view;
 	}
+	
+	//redirect로 이동하는 방법
+	@GetMapping("/main")
+	public String main() {
+		return "redirect:/loginView.do";
+	}
+	
 }
+
+
+
+
+
+
