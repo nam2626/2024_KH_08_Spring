@@ -2,11 +2,13 @@ package com.kh;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -50,6 +52,14 @@ public class RestMainController {
 		}
 		
 		return new ResponseEntity(map,status);
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<HashMap<String, Object>> login(@RequestBody Map<String, String> body){
+		HashMap<String, Object> map = new HashMap<>();
+		System.out.println(body.get("id") + " / " + body.get("pass"));
+		map.put("msg", "login 호출");
+		return ResponseEntity.ok(map);
 	}
 }
 

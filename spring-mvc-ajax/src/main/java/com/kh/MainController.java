@@ -17,6 +17,11 @@ public class MainController {
 	public RegisterDTO getMethodName() {
 		return new RegisterDTO("A0002","홍길동","123456",44);
 	}
+	
+	@GetMapping("/login/view")
+	public String login() {
+		return "login";
+	}
 }
 
 
