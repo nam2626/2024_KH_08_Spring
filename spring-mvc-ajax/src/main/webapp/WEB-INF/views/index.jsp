@@ -8,13 +8,25 @@
 <script>
 	window.onload = () => {
 		document.querySelector('.true').onclick = (e) => {
-			fetch("/map").then(response => response.json()).then((result) => {
+			fetch("/true").then(response => response.json()).then((result) => {
 				console.log(result);
 				let tag = '';
 				result.list.forEach((item) => {
 					tag += `<p>\${item.memberId} / \${item.passwd} / \${item.name} / \${item.age}</p>`;
 				})
 				document.querySelector('#result').innerHTML = tag;
+			});			
+		}
+		
+		document.querySelector('.false').onclick = (e) => {
+			fetch("/call?data=false",{
+				method : "POST"
+			}).then(response => response.json()).then((result) => {
+				console.log(result);
+				let tag = `\${result.msg}`;
+				document.querySelector('#result').innerHTML = tag;
+			}).catch(error => {
+				console.log(error);
 			});			
 		}
 	}
