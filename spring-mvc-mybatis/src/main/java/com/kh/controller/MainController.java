@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.dto.BoardMemberDTO;
@@ -33,6 +35,17 @@ public class MainController {
 		return view;
 	}
 	
+	@GetMapping("/member/register/view")
+	public String registerView() {
+		return "member_insert_view";
+	}
+	
+	@PostMapping("/member/register")
+	public String memberRegister(BoardMemberDTO member) {
+		System.out.println(member);
+		service.insertMember(member);
+		return "redirect:/members";
+	}
 }
 
 

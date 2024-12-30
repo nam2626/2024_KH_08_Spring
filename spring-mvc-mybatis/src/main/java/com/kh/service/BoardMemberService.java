@@ -19,6 +19,10 @@ public class BoardMemberService {
 	public List<BoardMemberDTO> selectAllMember() {
 		return mapper.selectAllMember();
 	}
+
+	public int insertMember(BoardMemberDTO member) {
+		return mapper.insertMember(member);
+	}
 	
 	
 }
