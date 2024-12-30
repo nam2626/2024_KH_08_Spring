@@ -23,6 +23,10 @@ public class BoardMemberService {
 	public int insertMember(BoardMemberDTO member) {
 		return mapper.insertMember(member);
 	}
+
+	public int deleteMember(String id) {
+		return mapper.deleteMember(id);
+	}
 	
 	
 }

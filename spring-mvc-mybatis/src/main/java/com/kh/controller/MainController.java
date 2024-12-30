@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,6 +45,21 @@ public class MainController {
 	public String memberRegister(BoardMemberDTO member) {
 		System.out.println(member);
 		service.insertMember(member);
+		return "redirect:/members"; 
+	}
+	
+	@GetMapping("/member/delete/{id}")
+//	public String deleteMember(@PathVariable("id") String id) {
+	public String deleteMember(@PathVariable String id) {
+		System.out.println("삭제할 아이디 : " + id);
+		int count = service.deleteMember(id);
+		
+		if(count == 0) {
+			System.out.println("데이터 삭제 실패");
+		}else {
+			System.out.println("데이터 삭제 성공");
+		}
+		
 		return "redirect:/members";
 	}
 }

@@ -26,7 +26,7 @@
 					<td>${member.password }</td>
 					<td>${member.userName }</td>
 					<td>${member.nickName }</td>
-					<td><a href="./deleteMember.do?id=${member.id}">삭제</a></td>
+					<td><a href="/member/delete/${member.id}">삭제</a></td>
 					
 				</tr>
 			</c:forEach>		
