@@ -49,10 +49,10 @@
 <body>
     <div class="form-container">
         <h1>회원가입</h1>
-        <form action="/member/register" method="post">
+        <form action="/member/update" method="post">
             <div class="form-group">
                 <label for="userId">아이디</label>
-                <input type="text" id="userId" name="id" required>
+                <input type="text" id="userId" name="id" value="${member.id }" readonly>
             </div>
             <div class="form-group">
                 <label for="password">암호</label>
@@ -60,14 +60,14 @@
             </div>
             <div class="form-group">
                 <label for="name">이름</label>
-                <input type="text" id="name" name="userName" required>
+                <input type="text" id="name" name="userName" value="${member.userName }" required>
             </div>
             <div class="form-group">
                 <label for="nickname">닉네임</label>
-                <input type="text" id="nickname" name="nickName" required>
+                <input type="text" id="nickname" name="nickName" value="${member.nickName }"  required>
             </div>
             <div class="form-group">
-                <button type="submit">회원가입</button>
+                <button type="submit">회원정보 수정</button>
             </div>
         </form>
     </div>
