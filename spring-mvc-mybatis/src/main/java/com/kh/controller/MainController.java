@@ -62,6 +62,25 @@ public class MainController {
 		
 		return "redirect:/members";
 	}
+	
+	@GetMapping("/member/{id}")
+	public ModelAndView updateView(ModelAndView view, @PathVariable String id) {
+		
+		BoardMemberDTO member = service.selectMember(id);
+		
+		view.addObject("member", member);
+		view.setViewName("member_update_view");
+		
+		return view;
+	}
+	
+	@PostMapping("/member/update")
+	public String memberUpdate(BoardMemberDTO member) {
+		System.out.println(member);
+		service.updateMember(member);
+		return "redirect:/members"; 
+	}
+	
 }
 
 

@@ -27,6 +27,14 @@ public class BoardMemberService {
 	public int deleteMember(String id) {
 		return mapper.deleteMember(id);
 	}
+
+	public BoardMemberDTO selectMember(String id) {
+		return mapper.selectMember(id);
+	}
+
+	public int updateMember(BoardMemberDTO member) {
+		return mapper.updateMember(member);
+	}
 	
 	
 }
