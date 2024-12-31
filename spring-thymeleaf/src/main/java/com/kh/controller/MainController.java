@@ -54,6 +54,18 @@ public class MainController {
 		view.setViewName("main");
 		return view;
 	}
+
+	@GetMapping("/member/register/view")
+	public String registerView() {
+		return "member_insert_view";
+	}
+
+	@PostMapping("/member/register")
+	public String memberRegister(BoardMemberDTO member) {
+		System.out.println(member);
+		service.insertMember(member);
+		return "redirect:/members"; 
+	}
 	
 }
 
