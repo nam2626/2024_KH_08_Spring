@@ -1,6 +1,8 @@
 package com.kh.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,13 @@ public class BoardMemberService {
 
 	public int updateMember(BoardMemberDTO member) {
 		return mapper.updateMember(member);
+	}
+
+	public BoardMemberDTO login(String id, String passwd) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", id);
+		map.put("passwd", passwd);
+		return mapper.login(map);
 	}
 	
 	

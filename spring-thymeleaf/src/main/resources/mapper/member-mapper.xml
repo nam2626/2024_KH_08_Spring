@@ -25,6 +25,12 @@
   		username = #{userName}, nickname = #{nickName}
   	where id like #{id}
   </update>
+
+  <select id="login" parameterType="map" resultType="member">
+  	select * from board_member 
+  	where id = #{id}  
+  	and password = standard_hash(#{passwd},'SHA512')
+  </select>
 </mapper>
 
 

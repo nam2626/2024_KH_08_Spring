@@ -1,6 +1,7 @@
 package com.kh.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,5 +16,6 @@ public interface BoardMemberMapper {
 	int deleteMember(String id);
 	BoardMemberDTO selectMember(String id);
 	int updateMember(BoardMemberDTO member);
-
+	BoardMemberDTO login(Map<String, Object> map);
+	
 }
