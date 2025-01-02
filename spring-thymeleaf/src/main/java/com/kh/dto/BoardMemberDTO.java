@@ -8,6 +8,7 @@ public class BoardMemberDTO {
 	private String password;
 	private String userName;
 	private String nickName;
+    private int grade;
 
     public BoardMemberDTO(String id, String password, String userName, String nickName) {
         this.id = id;
@@ -55,8 +56,16 @@ public class BoardMemberDTO {
         return "BoardMemberDTO [id=" + id + ", password=" + password + ", userName=" + userName + ", nickName="
                 + nickName + "]";
     }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
 	
-    
+         
 	
 	
 }

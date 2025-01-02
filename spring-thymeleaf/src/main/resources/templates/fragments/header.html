@@ -23,7 +23,7 @@
         <ul>
             <li><a href="/members">홈</a></li>
             <li><a href="/member/register/view">회원등록</a></li>
-            <li>
+            <li th:if="${session.member != null}">
                 [[${session.member.userName}]]님 로그인 / <a href="/logout">로그아웃</a>
             </li>
         </ul>
@@ -31,3 +31,11 @@
     <!-- <p><span th:text="${session.member.userName}"></span>님이 로그인 하셨습니다.</p> -->
 
     <hr>
+
+    <!-- 로그인이 안되어 있으면 index.html로 이동 -->
+     <th:block th:if="${session.member == null}">
+         <script>
+             alert("로그인 하셔야 이용할 수 있습니다.");
+             location.href = "/";
+         </script>
+     </th:block>
