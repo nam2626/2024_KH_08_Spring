@@ -14,6 +14,8 @@ import com.kh.service.BoardMemberService;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @Controller
@@ -66,6 +68,14 @@ public class MainController {
 		service.insertMember(member);
 		return "redirect:/members"; 
 	}
+
+	//회원정보 삭제 메서드
+	@GetMapping("/member/delete/{id}")
+	public String deleteMember(@PathVariable String id) {
+		service.deleteMember(id);
+		return "redirect:/members";
+	}
+	
 	
 }
 
