@@ -64,7 +64,7 @@
                     <th:block th:case="5">Admin</th:block>   
                     <th:block th:case="*">Unknown</th:block>
                  </td>
-                 <td><a href="">삭제</a> / <a href="">수정</a></td>
+                 <td><a th:href="@{/member/delete/{id}(id=${member.id})}">삭제</a> / <a href="">수정</a></td>
              </tr>
            <!--   <th:block th:each="member : ${list}">
                  <tr>
