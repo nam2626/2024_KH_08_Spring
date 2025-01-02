@@ -75,8 +75,17 @@ public class MainController {
 		service.deleteMember(id);
 		return "redirect:/members";
 	}
+
+	@GetMapping("/member/{id}")
+	public ModelAndView updateMemberView(@PathVariable String id, ModelAndView view) {
+		view.setViewName("member_update_view");
+		BoardMemberDTO member = service.selectMember(id);
+		view.addObject("member", member);
+		return view;
+	}
 	
 	
+
 }
 
 
