@@ -4,8 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
   <th:block th:include="/fragments/header.html"></th:block>
+  <hr>
+  <div class="container">
+    <!-- 게시판 글 목록 출력 -->
+     <h2>게시글 목록</h2>
+     <table class="board-table">
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>제목</th>
+          <th>작성자</th>
+          <th>작성일</th>
+          <th>조회수</th>
+          <th>좋아요</th>
+          <th>싫어요</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="board : ${list}">
+          <td>[[${board.bno}]]</td>
+          <td><a th:href="@{/board/{bno}(bno=${board.bno})}">[[${board.title}]]</a></td>
+          <td>[[${board.id}]]</td>
+          <td>[[${board.writeDate}]]</td>
+          <td>[[${board.bcount}]]</td>
+          <td>[[${board.blike}]]</td>
+          <td>[[${board.bhate}]]</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </body>
 </html>
