@@ -3,10 +3,13 @@ package com.kh.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.kh.dto.BoardCommentDTO;
 import com.kh.dto.BoardDTO;
 import com.kh.dto.BoardFileDTO;
 
+@Mapper
 public interface BoardMapper {
 	//페이지별 게시글 목록 조회	
 	List<BoardDTO> getBoardList(Map<String, Object> map);
