@@ -41,7 +41,9 @@
             <!-- 이전 페이지 그룹 이동 -->
 
             <!-- 페이지 번호 출력 -->
-             
+            <a th:href="@{/main(pageNo=${i},pageContentEa=${pagging.pageContentEa})}" th:each="i : ${#numbers.sequence(pagging.startPageOfPageGroup,pagging.endPageOfPageGroup)}">[[${i}]]</a>
+
+
             <!-- 다음 페이지 그룹 이동 -->
 
           </td>
