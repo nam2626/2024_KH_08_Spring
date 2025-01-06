@@ -2,8 +2,8 @@
   nav ul {
     list-style: none;
     display: flex;
-    justify-content: center;
-    padding: 0;
+    justify-content: space-between;
+    padding: 20px 0px;
     background-color: #ccc;
   }
   nav ul li {
@@ -12,6 +12,7 @@
   nav ul li a {
     color: #333;
     text-decoration: none;
+    font-size: 1.3em;
   }
   nav ul li a:hover {
     color: #666;
@@ -20,6 +21,9 @@
 <nav>
   <ul>
     <li><a href="/">Home</a></li>
+    <li></li>
+    <li></li>
+    <li></li>
     <li th:if="${session.user == null}"><a href="/">회원가입</a></li>
     <li th:if="${session.user == null}"><a href="/">로그인</a></li>
   </ul>
