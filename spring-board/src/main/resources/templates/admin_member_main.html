@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>  
+  <th:block th:include="/fragments/header.html"></th:block>
+  <hr>
+  <div class="container">
+    <h2>회원 관리 페이지</h2>
+    <hr>
+    <table>
+      <thead>
+        <tr>
+          <th>아이디</th>
+          <th>이름</th>
+          <th>닉네임</th>
+          <th>회원등급</th>
+          <th>비고</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="member : ${list}">
+          <td><input type="text" class="id" readonly th:value="${member.id}"></td>
+          <td><input type="text" class="userName" th:value="${member.userName}"></td>
+          <td><input type="text" class="nickName" th:value="${member.nickName}"></td>
+          <td>
+            <select name="grade">
+              <option value="0" th:selected="${member.grade == 0}">Bronze</option>
+              <option value="1" th:selected="${member.grade == 1}">Silver</option>
+              <option value="2" th:selected="${member.grade == 2}">Gold</option>
+              <option value="3" th:selected="${member.grade == 3}">VIP</option>
+              <option value="4" th:selected="${member.grade == 4}">VVIP</option>
+              <option value="5" th:selected="${member.grade == 5}">Admin</option>
+            </select>
+          </td>
+          <td>
+            <button class="btn_update">수정</button>
+            <button class="btn_delete">삭제</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
