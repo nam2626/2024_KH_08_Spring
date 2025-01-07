@@ -20,7 +20,17 @@ public class PaggingVO {
 		return currentPage;
 	}
 
-	//전체 페이지 개수 : 전체 게시글 개수 / 한페이지당 출력할 게시글 개수 + (나머지가 0 아니면 1)
+	
+
+	public int getPageOfContentCount() {
+    return pageOfContentCount;
+  }
+
+  public void setPageOfContentCount(int pageOfContentCount) {
+    this.pageOfContentCount = pageOfContentCount;
+  }
+
+  //전체 페이지 개수 : 전체 게시글 개수 / 한페이지당 출력할 게시글 개수 + (나머지가 0 아니면 1)
 	public int getTotalPage() {
 		return count / pageOfContentCount + (count % pageOfContentCount == 0 ? 0 : 1);
 	}

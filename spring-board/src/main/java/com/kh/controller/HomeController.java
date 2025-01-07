@@ -19,7 +19,7 @@ public class HomeController {
     this.boardService = boardService;
   }
 
-  @GetMapping("/")
+  @GetMapping({"/", "/main"})
   public ModelAndView index(@RequestParam(defaultValue = "1") int pageNo,
     @RequestParam(defaultValue = "30") int pageContentEa, ModelAndView view) {
       //전체 게시글 개수 조회
