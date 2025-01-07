@@ -37,4 +37,10 @@ public class HomeController {
     return view;
   }
 
+
+  @GetMapping("/login/view")
+  public String loginView() {
+      return "login";
+  }
+  
 }
