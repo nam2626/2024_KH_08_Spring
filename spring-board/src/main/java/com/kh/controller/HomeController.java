@@ -55,7 +55,8 @@ public class HomeController {
   @PostMapping("/login")
   public String login(String id, String password, HttpSession session, HttpServletResponse response) throws IOException {
       BoardMemberDTO member = boardMemberService.login(id, password);
-      if(member == null) {
+      System.out.println(member);
+      if(member != null) {
         session.setAttribute("user", member);
         return "redirect:/main";
       }
