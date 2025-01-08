@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,11 +17,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.dto.BoardMemberDTO;
 import com.kh.service.BoardMemberService;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 
+//크로스 도메인 이슈 해결 방법
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/member")
 @Controller
 public class MemberController {
@@ -89,4 +90,11 @@ public class MemberController {
 
       return map;
   }
+
+  @ResponseBody
+  @GetMapping("/list")
+  public List<BoardMemberDTO> memberList() {
+      return service.selectAllMember();
+  }
+  
 }
