@@ -65,7 +65,7 @@
         body : JSON.stringify(item)
       }).then(response => response.json())
       .then(result => {
-        alert(result.msg);
+        console.log(result.msg);
         //updateTable(result.list);
       });
       
