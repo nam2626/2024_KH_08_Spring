@@ -16,5 +16,6 @@ public interface BoardMemberMapper {
 	int deleteMember(String id);
 	int selectIdMember(String id);
 	BoardMemberDTO findMemberByIdAndPassword(Map<String, String> map);
+  int updateMember(Map<String, String> map);
 
 }

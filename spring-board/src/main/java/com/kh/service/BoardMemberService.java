@@ -45,7 +45,9 @@ public class BoardMemberService {
 		}
 	}
 
-	
+  public int updateMember(Map<String, String> map) {
+		return mapper.updateMember(map);
+	}
 	
 }
 

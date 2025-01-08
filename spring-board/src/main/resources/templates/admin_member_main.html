@@ -14,8 +14,22 @@
             body : JSON.stringify({id})
           }).then(response => response.json()).then(result => {
             console.log(result);
+            alert(result.msg);
             updateTable(result.list);
       })
+    }
+    function updateMember(item){
+      fetch('/member/update',{
+        method : 'PUT',
+        headers : {
+          "Content-Type" : "application/json"
+        },
+        body : JSON.stringify(item)
+      }).then(response => response.json())
+      .then(result => {
+        alert(result.msg);
+        updateTable(result.list);
+      });
     }
     function updateTable(list) {
       let tag = '';

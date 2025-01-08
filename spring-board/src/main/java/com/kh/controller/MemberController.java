@@ -15,6 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.dto.BoardMemberDTO;
 import com.kh.service.BoardMemberService;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 @RequestMapping("/member")
@@ -54,4 +57,20 @@ public class MemberController {
     return map;
   }
   
+  @ResponseBody
+  @PutMapping("/update")
+  public Map<String, Object> updateMember(@RequestBody Map<String,String> body)  {
+      HashMap<String, Object> map = new HashMap<>();
+      System.out.println(body);
+      int count = service.updateMember(body);
+      if(count > 0) {
+        map.put("msg", body.get("id") + " - 해당 아이디 수정 완료");
+      }else{
+        map.put("msg", body.get("id") + " - 수정할 아이디를 찾을 수 없습니다.");
+      }
+  
+      List<BoardMemberDTO> list = service.selectAllMember();
+      map.put("list", list);
+      return map;
+  } 
 }
