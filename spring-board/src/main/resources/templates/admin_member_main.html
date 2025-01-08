@@ -56,6 +56,20 @@
               });
               document.querySelector('tbody').innerHTML = tag;
     }
+    function updateColumnMember(item){
+      fetch('/member/updateColumn',{
+        method : 'PATCH',
+        headers : {
+          "Content-Type" : "application/json"
+        },
+        body : JSON.stringify(item)
+      }).then(response => response.json())
+      .then(result => {
+        alert(result.msg);
+        //updateTable(result.list);
+      });
+      
+    }
     window.onload = () => {
       document.querySelector('tbody').onclick = (e) =>{
         console.log(e.target);
@@ -75,6 +89,17 @@
           updateMember(obj);
         }
       }
+
+      document.querySelectorAll('tbody input, tbody select').forEach(item => {
+        item.onchange = (e) => {
+          const id = e.target.parentNode.parentNode.querySelector('.id').value;
+          const obj = {
+            [e.target.className] : e.target.value,
+            id : id
+          };
+          updateColumnMember(obj);
+        }
+      })
     }
 
   </script>

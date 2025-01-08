@@ -68,9 +68,10 @@ public class MemberController {
       }else{
         map.put("msg", body.get("id") + " - 수정할 아이디를 찾을 수 없습니다.");
       }
-  
+        
       List<BoardMemberDTO> list = service.selectAllMember();
       map.put("list", list);
       return map;
   } 
+
 }
