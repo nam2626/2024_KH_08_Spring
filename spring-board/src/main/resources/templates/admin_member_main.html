@@ -94,7 +94,8 @@
         item.onchange = (e) => {
           const id = e.target.parentNode.parentNode.querySelector('.id').value;
           const obj = {
-            [e.target.className] : e.target.value,
+            column : e.target.className,
+            value : e.target.value,
             id : id
           };
           updateColumnMember(obj);

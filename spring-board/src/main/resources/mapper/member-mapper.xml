@@ -31,6 +31,12 @@
       grade = #{grade}
       where id like #{id}
   </update>
+  <update id="updateColumnMember" parameterType="map">
+    update board_member
+    set
+      ${column} = #{value}
+      where id like #{id}
+  </update>
 </mapper>
 
 
