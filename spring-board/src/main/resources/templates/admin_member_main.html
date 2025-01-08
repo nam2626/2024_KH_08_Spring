@@ -5,21 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script>
-    window.onload = () => {
-      document.querySelectorAll('.btn_delete').forEach((item) => {
-          item.onclick = (e) => {
-          //아이디 선택
-            const id = e.target.parentNode.parentNode.querySelector('.id').value;
-            fetch('/member/delete',{
-              method : "DELETE",
-              headers : {
-                "Content-Type" : "application/json"
-              },
-              body : JSON.stringify({id})
-            }).then(response => response.json()).then(result => {
-              console.log(result);
-              let tag = '';
-              result.list.forEach((item) => {
+    function deleteMember(id) {
+      fetch('/member/delete',{
+            method : "DELETE",
+            headers : {
+              "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({id})
+          }).then(response => response.json()).then(result => {
+            console.log(result);
+            updateTable(result.list);
+      })
+    }
+    function updateTable(list) {
+      let tag = '';
+      list.forEach((item) => {
                 tag += `<tr>
                   <td><input type="text" class="id" readonly value="${item.id}"></td>
                   <td><input type="text" class="userName" value="${item.userName}"></td>
@@ -41,9 +41,15 @@
                 </tr>`;
               });
               document.querySelector('tbody').innerHTML = tag;
-            })
-          }
-      });
+    }
+    window.onload = () => {
+      document.querySelector('tbody').onclick = (e) =>{
+        console.log(e.target);
+        if(e.target.className == 'btn_delete'){
+          const id = e.target.parentNode.parentNode.querySelector('.id').value;
+          deleteMember(id);
+        }
+      }
     }
 
   </script>
