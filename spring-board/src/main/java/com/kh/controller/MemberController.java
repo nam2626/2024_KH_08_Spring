@@ -110,6 +110,7 @@ public class MemberController {
     BoardMemberDTO dto = new BoardMemberDTO(id, password, userName, nickName, 0);
 
     int count = service.insertMember(dto);
+    map.put("count", count);
     if(count > 0) {
       map.put("msg", id + " - 회원가입 완료");
     }else{
