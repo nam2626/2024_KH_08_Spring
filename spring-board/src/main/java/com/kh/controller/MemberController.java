@@ -17,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.dto.BoardMemberDTO;
 import com.kh.service.BoardMemberService;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 
 
@@ -95,6 +97,26 @@ public class MemberController {
   @GetMapping("/list")
   public List<BoardMemberDTO> memberList() {
       return service.selectAllMember();
+  }
+
+  @ResponseBody
+  @PostMapping("/register")
+  public Map<String, Object> register(@RequestBody Map<String, String> body) {
+    Map<String, Object> map = new HashMap<>();
+    String id = body.get("id");
+    String password = body.get("passwd");
+    String userName = body.get("name");
+    String nickName = body.get("nickname");
+    BoardMemberDTO dto = new BoardMemberDTO(id, password, userName, nickName, 0);
+
+    int count = service.insertMember(dto);
+    if(count > 0) {
+      map.put("msg", id + " - 회원가입 완료");
+    }else{
+      map.put("msg", "회원 가입 실패, 입력하신 데이터를 확인해주세요.");
+    }
+      
+    return map;
   }
   
 }

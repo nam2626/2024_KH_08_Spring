@@ -52,6 +52,10 @@ public class BoardMemberService {
   public int updateColumnMember(Map<String, String> body) {
 		return mapper.updateColumnMember(body);
 	}
+
+  public int insertMember(BoardMemberDTO dto) {
+		return mapper.insertMember(dto);
+	}
 	
 }
 
