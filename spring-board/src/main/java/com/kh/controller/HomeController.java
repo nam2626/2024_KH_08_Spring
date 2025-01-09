@@ -69,5 +69,10 @@ public class HomeController {
       return null;
   }
   
-  
+  @GetMapping("/logout")
+  public String logout(HttpSession session) {
+      session.invalidate();
+      return "redirect:/main";   
+  }
+
 }
