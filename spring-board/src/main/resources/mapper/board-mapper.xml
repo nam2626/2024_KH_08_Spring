@@ -59,7 +59,7 @@
  	</insert>
  	<select id="getCommentList" resultType="com.kh.dto.BoardCommentDTO" parameterType="map">
  		SELECT * FROM 
-		(SELECT ROW_NUMBER() over(ORDER BY cdate desc) AS rw , bcv.* 
+		(SELECT ROW_NUMBER() over(ORDER BY cdate asc) AS rw , bcv.* 
 		FROM BOARD_COMMENT_VIEW bcv WHERE BNO = #{bno}) WHERE rw BETWEEN #{start} AND (#{start}+4)
  	</select>
  	<delete id="deleteBoard">
