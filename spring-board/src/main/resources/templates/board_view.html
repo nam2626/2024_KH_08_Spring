@@ -113,12 +113,12 @@
 		//좋아요 링크 클릭 -> 경고창 띄우기
 		document.querySelector('#btn_like').onclick = () => {
 			//alert('좋아요 클릭')
-			fetch('./board/like/[[${board.bno}]]')
+			fetch('/board/like/[[${board.bno}]]')
 			.then(response => response.json())
 			.then((result) => {
 				console.log(result);
 				if(result.code == 2){
-					if(confirm(result.msg))	location.href='./index.jsp';
+					if(confirm(result.msg))	location.href='/login/view';
 				}
 				else alert(result.msg);
 				//좋아요 개수 갱신
