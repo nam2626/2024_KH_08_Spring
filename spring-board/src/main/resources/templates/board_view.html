@@ -113,7 +113,7 @@
 		//좋아요 링크 클릭 -> 경고창 띄우기
 		document.querySelector('#btn_like').onclick = () => {
 			//alert('좋아요 클릭')
-			fetch('./boardLike.do?bno=${board.boardNo}')
+			fetch('./board/like/[[${board.bno}]]')
 			.then(response => response.json())
 			.then((result) => {
 				console.log(result);
