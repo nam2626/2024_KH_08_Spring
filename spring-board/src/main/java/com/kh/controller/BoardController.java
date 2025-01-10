@@ -17,7 +17,11 @@ import com.kh.dto.BoardDTO;
 import com.kh.dto.BoardMemberDTO;
 import com.kh.service.BoardService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RequestMapping("/board")
@@ -99,6 +103,30 @@ public class BoardController {
     }
     return map;
   }
+
+  @PostMapping("/comment")
+  public String boardCommentWrite(BoardCommentDTO comment, HttpSession session, HttpServletResponse response) {
+      //로그인하지 않았을때
+      if(session.getAttribute("user") == null){
+          response.setContentType("text/html; charset=utf-8");
+          try {
+              response.getWriter().println(
+                      "<script>alert('로그인 하셔야 이용하실수 있습니다.'); location.href='/login/view';</script>");
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+          return null;
+      }
+
+
+
+      String id = ((BoardMemberDTO)session.getAttribute("user")).getId();
+      comment.setId(id);
+      boardService.insertBoardComment(comment);
+      
+      return "redirect:/board/" + comment.getBno();
+  }
+  
 }
 
 

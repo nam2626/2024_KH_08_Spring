@@ -238,12 +238,15 @@
 		 <tr>
 		 	<td colspan="2">
 		 		<!-- 댓글 입력 폼 -->
-		 		<div class="comment_form">
-					<form action="commentWrite.do" method="post">
-						<input type="hidden" name="bno" value="${board.boardNo }">
-						<textarea name="comment" placeholder="댓글을 입력하세요"></textarea>
+		 		<div class="comment_form" th:if="${session.user != null }">
+					<form action="/board/comment" method="post">
+						<input type="hidden" name="bno" th:value="${board.bno }">
+						<textarea name="content" placeholder="댓글을 입력하세요"></textarea>
 						<button>댓글작성</button>
 					</form>
+				</div>
+				<div class="comment_form" th:if="${session.user == null }">
+					<p>로그인 후 작성가능</p>
 				</div>
 		 	</td>
 		 </tr>
