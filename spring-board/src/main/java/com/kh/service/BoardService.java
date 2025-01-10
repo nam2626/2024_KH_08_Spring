@@ -142,6 +142,14 @@ public class BoardService {
 			return mapper.selectBoardTotalCount();
 	}
 
+	public int selectCommentLikeCount(int cno) {
+		return mapper.selectCommentLikeCount(cno);
+	}
+
+  public int selectCommentHateCount(int cno) {
+    return mapper.selectCommentHateCount(cno); 
+  }
+
 	
 	
 	

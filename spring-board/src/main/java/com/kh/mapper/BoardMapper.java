@@ -37,6 +37,8 @@ public interface BoardMapper {
 	int deleteBoardCommentHate(Map<String, Object> map);
 	int insertBoardCommentHate(Map<String, Object> map);
 	int selectBoardTotalCount();
+  int selectCommentLikeCount(int cno);
+  int selectCommentHateCount(int cno);
 
 }
 
