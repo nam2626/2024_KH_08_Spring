@@ -57,8 +57,10 @@
  		insert into board_comment(cno, bno, content, id)
  		values(SEQ_BOARD_COMMENT_CNO.nextval, #{bno}, #{content}, #{id})
  	</insert>
- 	<select id="getCommentList" resultType="com.kh.dto.BoardCommentDTO">
- 		SELECT * FROM BOARD_COMMENT_VIEW WHERE BNO = #{bno}
+ 	<select id="getCommentList" resultType="com.kh.dto.BoardCommentDTO" parameterType="map">
+ 		SELECT * FROM 
+		(SELECT ROW_NUMBER() over(ORDER BY cdate desc) AS rw , bcv.* 
+		FROM BOARD_COMMENT_VIEW bcv WHERE BNO = #{bno}) WHERE rw BETWEEN #{start} AND (#{start}+4)
  	</select>
  	<delete id="deleteBoard">
  		delete from board where bno = #{bno}
