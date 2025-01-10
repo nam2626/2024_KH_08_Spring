@@ -129,12 +129,12 @@
 			})
 		}
 		document.querySelector('#btn_hate').onclick = () => {
-			fetch('./boardHate.do?bno=${board.boardNo}')
+			fetch('/board/hate/[[${board.bno}]]')
 			.then(response => response.json())
 			.then((result) => {
 				console.log(result);
 				if(result.code == 2){
-					if(confirm(result.msg))	location.href='./index.jsp';
+					if(confirm(result.msg))	location.href='/login/view';
 				}
 				else alert(result.msg);
 				document.querySelector("#hate_count").innerHTML = result.count;
