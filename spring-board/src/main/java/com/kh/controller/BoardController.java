@@ -47,7 +47,7 @@ public class BoardController {
     }
 
     BoardDTO board = boardService.selectBoard(bno);
-    List<BoardCommentDTO> commentList = boardService.getCommentList(bno);
+    List<BoardCommentDTO> commentList = boardService.getCommentList(bno, 1);
 
     view.addObject("board", board);
     view.addObject("commentList", commentList);

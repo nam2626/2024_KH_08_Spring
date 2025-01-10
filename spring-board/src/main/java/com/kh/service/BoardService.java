@@ -51,8 +51,11 @@ public class BoardService {
 			return mapper.insertBoardComment(dto);
 	}
 
-	public List<BoardCommentDTO> getCommentList(int bno) {
-			return mapper.getCommentList(bno);
+	public List<BoardCommentDTO> getCommentList(int bno, int start) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("bno", bno);
+			map.put("start", start);
+			return mapper.getCommentList(map);
 	}
 
 	public int deleteBoard(int bno) {
