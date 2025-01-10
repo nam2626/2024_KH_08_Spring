@@ -110,6 +110,21 @@
 </style>
 <script>
 	window.onload = () => {
+		let commentCount = 1;
+		//댓글 추가로 읽어오기
+		document.querySelector('#btn_more').onclick = () => {
+			commentCount += 5;
+			fetch(`/board/comment/[[${board.bno}]]?start=${commentCount}`,{
+				method : "GET",
+				
+			}).then(res => res.json())
+			.then(result => {
+				console.log(result);
+			}).catch(error => {
+				console.log(error);
+			})
+		}
+
 		//좋아요 링크 클릭 -> 경고창 띄우기
 		document.querySelector('#btn_like').onclick = () => {
 			//alert('좋아요 클릭')
@@ -260,17 +275,20 @@
 		댓글 내용
 		삭제버튼
 	 -->
-	 	<div class="comment" th:each="comment : ${commentList }">
-	 		<p>
-	 			<input type="hidden" name="cno" th:value="${comment.cno }"/>
-	 			<span>[[${comment.id }]]</span>
-	 			<span>작성일 : [[${comment.cdate }]]</span>
-	 			<span><a href="#" class="btn_comment_like">좋아요 : <span>[[${comment.clike }]]</span></a></span>
-	 			<span><a href="#" class="btn_comment_hate">싫어요 : <span>[[${comment.chate}]]</span></a></span>
-	 		</p>
-	 		<p>[[${comment.content }]]</p>
-	 			<a th:if="${session.user != null && session.user.id == comment.id }" href="@{/comment/delete/{cno}(cno=${comment.cno })}">댓글 삭제</a>
-	 	</div>
+		<div class="comment_container">
+			<div class="comment" th:each="comment : ${commentList }">
+				<p>
+					<input type="hidden" name="cno" th:value="${comment.cno }"/>
+					<span>[[${comment.id }]]</span>
+					<span>작성일 : [[${comment.cdate }]]</span>
+					<span><a href="#" class="btn_comment_like">좋아요 : <span>[[${comment.clike }]]</span></a></span>
+					<span><a href="#" class="btn_comment_hate">싫어요 : <span>[[${comment.chate}]]</span></a></span>
+				</p>
+				<p>[[${comment.content }]]</p>
+				<a th:if="${session.user != null && session.user.id == comment.id }" href="@{/comment/delete/{cno}(cno=${comment.cno })}">댓글 삭제</a>
+			</div>
+		</div>
+		<button type="button" id="btn_more">댓글 더보기</button>			
 	</div>
 </body>
 </html>
