@@ -110,8 +110,9 @@
 </style>
 <script>
 	window.onload = () => {
-		const userId = '[[${session.user.id}]]';
+		const userId = '[[${session.user != null ? session.user.id : ""}]]';
 		let commentCount = 6;
+
 		//댓글 추가로 읽어오기
 		document.querySelector('#btn_more').onclick = () => {
 			fetch(`/board/comment/[[${board.bno}]]?start=${commentCount}`).then(res => res.json())
@@ -175,13 +176,24 @@
 		//댓글 좋아요
 		document.querySelector('.comment_container').onclick = (e) => {
 			//댓글 좋아요 싫어요 눌렀을때만 반응하게끔 처리
-			if(e.target.className != 'btn_comment_like' && e.target.className != 'btn_comment_hate') return;
-			console.log(e.target);
-			console.log(e.target.parentNode.parentNode.querySelector('input[name="cno"]').value);
-
-			let cno = e.target.parentNode.parentNode.querySelector('input[name="cno"]').value;
-			commentLikeHateAjax(e.target.className == 'btn_comment_like', cno,e.target);
-		}
+				if(e.target.className == 'btn_comment_like' && e.target.className == 'btn_comment_hate'){
+					console.log(e.target);
+					console.log(e.target.parentNode.parentNode.querySelector('input[name="cno"]').value);
+					
+					let cno = e.target.parentNode.parentNode.querySelector('input[name="cno"]').value;
+					commentLikeHateAjax(e.target.className == 'btn_comment_like', cno,e.target);
+				}
+				//댓글 삭제 버튼 눌렀을때
+				if(e.target.className == 'btn_comment_delete'){
+					console.log(e.target);
+					location.href = `/board/comment/delete/${e.target.parentNode.parentNode.querySelector('input[name="cno"]').value}`
+				}
+				//댓글 수정 버튼 눌렀을때
+				if(e.target.className == 'btn_comment_update'){
+					console.log(e.target);
+				
+				}
+			}
 	}
 	function commentLikeHateAjax(mode, cno, target){
 		let url = `/board/comment/${mode ? "like" : "hate"}/${cno}`;
