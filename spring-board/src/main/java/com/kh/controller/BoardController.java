@@ -202,6 +202,24 @@ public class BoardController {
       return map;
     }  
 
+    @GetMapping("/comment/{cno}")
+    public String commentDelete(@PathVariable int cno, HttpSession session, HttpServletResponse response) {
+      BoardCommentDTO comment = boardService.selectComment(cno);
+      if(session.getAttribute("user") != null && ((BoardMemberDTO)session.getAttribute("user")).getId().equals(comment.getId())){
+        boardService.deleteBoardComment(cno);
+      }else{
+        response.setContentType("text/html; charset=utf-8");
+        try {
+            response.getWriter().println(
+                    "<script>alert('해당 댓글 작성자만 삭제가 가능합니다.'); history.back();</script>");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+      }
+      return "redirect:/board/" + comment.getBno();
+    }
+    
 }
 
 
