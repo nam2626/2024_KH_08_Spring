@@ -188,10 +188,20 @@
 					console.log(e.target);
 					location.href = `/board/comment/delete/${e.target.parentNode.parentNode.querySelector('input[name="cno"]').value}`;
 				}
-				//댓글 수정 버튼 눌렀을때
+				//댓글 수정 버튼 눌렀을때 -> 해당 댓글을 수정하는 폼으로 교체
 				if(e.target.className == 'btn_comment_update'){
 					console.log(e.target);
-				
+				// 1. textarea를 생성, document.createElement('태그명');
+					const newElement = document.createElement('textarea');
+				// 2. 기존에 p 태그에 있는 내용을 1번에서 생성한 textarea에 저장
+					const oldElement = e.target.parentNode.parentNode.nextElementSibling;
+					newElement.value = oldElement.innerHTML;
+				// 3. 기존 태그를 1번에서 만든 태그로 교체
+				//    부모 태그를 선택하여 replaceChild를 이용하면 해당 자식태그를 교체
+				oldElement.parentNode.replaceChild(newElement, oldElement);
+				// 4. 취소와 수정 버튼의 이벤트 처리
+				// 5. 취소/수정 버튼을 생성해서 부모태그의 appendChild를 이용해서
+				//     자식요소로 추가
 				}
 			}
 	}
