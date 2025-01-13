@@ -150,6 +150,10 @@ public class BoardService {
     return mapper.selectCommentHateCount(cno); 
   }
 
+  public BoardCommentDTO selectComment(int cno) {
+		return mapper.selectComment(cno);
+	}
+
 	
 	
 	

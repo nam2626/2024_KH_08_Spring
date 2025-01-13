@@ -113,7 +113,9 @@
 	<select id="selectCommentHateCount" resultType="int">
 		select count(*) from board_comment_hate where cno = #{cno}
 	</select>
- 	
+ 	<select id="selectComment" resultType="comment">
+ 		select * from board_comment_view where cno = #{cno}
+ 	</select>
 </mapper>
 
 

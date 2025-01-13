@@ -202,7 +202,7 @@ public class BoardController {
       return map;
     }  
 
-    @GetMapping("/comment/{cno}")
+    @GetMapping("/comment/delete/{cno}")
     public String commentDelete(@PathVariable int cno, HttpSession session, HttpServletResponse response) {
       BoardCommentDTO comment = boardService.selectComment(cno);
       if(session.getAttribute("user") != null && ((BoardMemberDTO)session.getAttribute("user")).getId().equals(comment.getId())){

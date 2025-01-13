@@ -39,6 +39,7 @@ public interface BoardMapper {
 	int selectBoardTotalCount();
   int selectCommentLikeCount(int cno);
   int selectCommentHateCount(int cno);
+  BoardCommentDTO selectComment(int cno);
 
 }
 
