@@ -199,9 +199,41 @@
 				// 3. 기존 태그를 1번에서 만든 태그로 교체
 				//    부모 태그를 선택하여 replaceChild를 이용하면 해당 자식태그를 교체
 				oldElement.parentNode.replaceChild(newElement, oldElement);
-				// 4. 취소와 수정 버튼의 이벤트 처리
-				// 5. 취소/수정 버튼을 생성해서 부모태그의 appendChild를 이용해서
+				// 4. 취소/수정 버튼을 생성해서 부모태그의 appendChild를 이용해서
 				//     자식요소로 추가
+				const btnCancel = document.createElement('button');
+				btnCancel.type='button';
+				btnCancel.innerHTML = '취소';
+				const btnUpdate = document.createElement('button');
+				btnUpdate.type='button';
+				btnUpdate.innerHTML = '수정';
+
+				newElement.parentNode.appendChild(btnCancel);
+				newElement.parentNode.appendChild(btnUpdate);
+				// 5. 취소와 수정 버튼의 이벤트 처리
+				btnCancel.onclick = () => {
+					newElement.parentNode.replaceChild(oldElement, newElement);
+					btnCancel.remove();
+					btnUpdate.remove();
+				}
+				btnUpdate.onclick = () => {
+					const cno = e.target.parentNode.parentNode.querySelector('input[name="cno"]').value;
+					const content = newElement.value;
+
+					fetch('/board/comment', {
+						method : 'PATCH',
+						headers : {
+							'Content-Type' : 'application/json'
+						},
+						body : JSON.stringify({cno, content})
+					}).then(response => response.json())
+					.then(result => {
+						console.log(result);
+						//수정 완료 후 태그 교체
+						
+					}).catch(error => {
+						console.log(error);						
+					})
 				}
 			}
 	}
