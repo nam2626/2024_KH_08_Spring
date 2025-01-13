@@ -238,22 +238,20 @@
 		<!-- 
 			해당 글을 쓴 작성자에게만 수정, 삭제 버튼이 나오게끔 처리
 		 -->
-		 <!-- <c:if test="${sessionScope.user.boardMemberId == board.boardMemberId }">
-		 <tr>
+		 <tr th:if="${session.user != null && session.user.id == board.id}">
 			 <td colspan="2">
 			 	<button id="btn_update">수정</button>
 			 	<button id="btn_delete">삭제</button>
 			 	<script>
 			 		document.querySelector("#btn_update").onclick = () =>{
-			 			location.href='./boardUpdateView.do?bno=${board.boardNo}';
+			 			location.href='/board/update/view?bno=[[${board.bno}]]';
 			 		}
 			 		document.querySelector("#btn_delete").onclick = () =>{
-			 			location.href='./boardDelete.do?bno=${board.boardNo}';
+						location.href='/board/delete/[[${board.bno}]]';
 			 		}
 			 	</script>
 			 </td>
 	 	</tr>
-		 </c:if> -->
 		 
 		 <tr>
 		 	
