@@ -106,6 +106,25 @@ public class BoardController {
     return map;
   }
 
+  @GetMapping("/delete/{bno}")
+  public String boardDelete(@PathVariable int bno, HttpSession session, HttpServletResponse response) {
+      if(session.getAttribute("user") != null && ((BoardMemberDTO)session.getAttribute("user")).getId().equals(boardService.selectBoard(bno).getId())){
+        boardService.deleteBoard(bno);
+      }else{
+        response.setContentType("text/html; charset=utf-8");
+        try {
+            response.getWriter().println(
+                    "<script>alert('해당 글 작성자만 삭제가 가능합니다..'); history.back();</script>");
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+      }
+      return "redirect:/main";
+  }
+  
+
   @PostMapping("/comment")
   public String boardCommentWrite(BoardCommentDTO comment, HttpSession session, HttpServletResponse response) {
       //로그인하지 않았을때
