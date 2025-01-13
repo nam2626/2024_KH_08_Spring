@@ -40,6 +40,7 @@ public interface BoardMapper {
   int selectCommentLikeCount(int cno);
   int selectCommentHateCount(int cno);
   BoardCommentDTO selectComment(int cno);
+  int updateBoardComment(BoardCommentDTO comment);
 
 }
 

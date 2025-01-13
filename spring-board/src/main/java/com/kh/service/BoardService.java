@@ -154,6 +154,10 @@ public class BoardService {
 		return mapper.selectComment(cno);
 	}
 
+	public int updateBoardComment(BoardCommentDTO comment) {
+		return mapper.updateBoardComment(comment);
+	}
+
 	
 	
 	

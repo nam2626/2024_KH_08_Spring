@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -220,6 +221,22 @@ public class BoardController {
       return "redirect:/board/" + comment.getBno();
     }
     
+    @PatchMapping("/comment")
+    @ResponseBody
+    public Map<String, Object> boardCommentUpdate(@RequestBody Map<String, String> body, HttpSession session) {
+      Map<String, Object> map = new HashMap<String, Object>();
+      BoardCommentDTO comment = boardService.selectComment(Integer.parseInt(body.get("cno")));
+      if(session.getAttribute("user") != null && ((BoardMemberDTO)session.getAttribute("user")).getId().equals(comment.getId())){
+        comment.setContent(body.get("content"));
+        boardService.updateBoardComment(comment);
+        map.put("code", 1);
+        map.put("msg", "해당 댓글 수정 완료");
+      }else{
+        map.put("code", 2);
+        map.put("msg", "해당 댓글 작성자만 수정이 가능합니다.");
+      }
+      return map;
+    }
 }
 
 

@@ -116,6 +116,9 @@
  	<select id="selectComment" resultType="comment">
  		select * from board_comment_view where cno = #{cno}
  	</select>
+	<update id="updateBoardComment" parameterType="comment">
+		update board_comment set content = #{content} where cno = #{cno}
+	</update>
 </mapper>
 
 

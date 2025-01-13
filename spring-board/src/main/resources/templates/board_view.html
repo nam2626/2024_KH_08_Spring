@@ -175,8 +175,9 @@
 		}
 		//댓글 좋아요
 		document.querySelector('.comment_container').onclick = (e) => {
+			console.log(e.target);
 			//댓글 좋아요 싫어요 눌렀을때만 반응하게끔 처리
-				if(e.target.className == 'btn_comment_like' && e.target.className == 'btn_comment_hate'){
+				if(e.target.className == 'btn_comment_like' || e.target.className == 'btn_comment_hate'){
 					console.log(e.target);
 					console.log(e.target.parentNode.parentNode.querySelector('input[name="cno"]').value);
 					
@@ -230,7 +231,15 @@
 					.then(result => {
 						console.log(result);
 						//수정 완료 후 태그 교체
-						
+						if(result.code == 1){
+							oldElement.innerHTML = newElement.value;
+							newElement.parentNode.replaceChild(oldElement, newElement);
+							btnCancel.remove();
+							btnUpdate.remove();
+						}else{
+							alert(result.msg);
+							location.href='/login/view';
+						}
 					}).catch(error => {
 						console.log(error);						
 					})
@@ -253,7 +262,7 @@
 			console.log(error);
 		});
 	}
-
+	}
 </script>
 </head>
 <body>
