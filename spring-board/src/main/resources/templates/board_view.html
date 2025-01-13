@@ -110,6 +110,7 @@
 </style>
 <script>
 	window.onload = () => {
+		const userId = '[[${session.user.id}]]';
 		let commentCount = 6;
 		//댓글 추가로 읽어오기
 		document.querySelector('#btn_more').onclick = () => {
@@ -124,7 +125,7 @@
 						<span>${item.id}</span>
 						<span>작성일 : ${item.cdate}</span>
 						<span><a href="#" class="btn_comment_like">좋아요 : <span>${item.clike}</span></a></span>
-						<span><a href="#" class="btn_comment_hate">싫어요 : <span>${item.chate}</span></a></span>
+						<span><a href="#" class="btn_comment_hate">싫어요 : <span>${item.chate}</span></a></span><span>${userId == item.id ? '<button type="button" class="btn_comment_delete">댓글 삭제</button><button type="button" class="btn_comment_update">댓글 수정</button>' : ''} </span>
 					</p>
 					<p>${item.content}</p>
 				</div>`;
@@ -290,9 +291,10 @@
 					<span>작성일 : [[${comment.cdate }]]</span>
 					<span><a href="#" class="btn_comment_like">좋아요 : <span>[[${comment.clike }]]</span></a></span>
 					<span><a href="#" class="btn_comment_hate">싫어요 : <span>[[${comment.chate}]]</span></a></span>
+					<span th:if="${session.user != null && session.user.id == comment.id}"><button type="button" class="btn_comment_delete">댓글 삭제</button><button type="button" class="btn_comment_update">댓글 수정</button></span>
 				</p>
 				<p>[[${comment.content }]]</p>
-				<a th:if="${session.user != null && session.user.id == comment.id }" href="@{/comment/delete/{cno}(cno=${comment.cno })}">댓글 삭제</a>
+				
 			</div>
 		</div>
 		<button type="button" id="btn_more">댓글 더보기</button>			
