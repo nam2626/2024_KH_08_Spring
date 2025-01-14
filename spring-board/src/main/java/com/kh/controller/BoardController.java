@@ -197,7 +197,17 @@ public class BoardController {
   @GetMapping("/delete/{bno}")
   public String boardDelete(@PathVariable int bno, HttpSession session, HttpServletResponse response) {
       if(session.getAttribute("user") != null && ((BoardMemberDTO)session.getAttribute("user")).getId().equals(boardService.selectBoard(bno).getId())){
+        // 첨부파일 삭제
+        //1. 파일 목록 받아옴
+        List<BoardFileDTO> fileList = boardService.getBoardFileList(bno);
+        //2. 파일 삭제
+        fileList.forEach(file -> {
+          File f = new File(file.getFpath());
+          f.delete();
+        });
+        //만약 board, board_file 테이블이 외래키로 cascade 제약조건이 설정되어있지 않다면, 직접 board_file 테이블의 데이터를 삭제해야함.
         boardService.deleteBoard(bno);
+
       }else{
         response.setContentType("text/html; charset=utf-8");
         try {
