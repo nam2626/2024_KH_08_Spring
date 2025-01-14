@@ -86,6 +86,10 @@ public class BoardController {
         root.mkdirs();
       }
       for(MultipartFile file : files){
+        //파일 업로드 전에 검사
+        if(file.isEmpty()){
+          continue;
+        }
         //업로드한 파일명
         String fileName = file.getOriginalFilename();
         //파일 저장할 경로 완성
