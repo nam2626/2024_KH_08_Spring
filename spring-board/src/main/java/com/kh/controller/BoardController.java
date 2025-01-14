@@ -1,5 +1,6 @@
 package com.kh.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,20 +10,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.dto.BoardCommentDTO;
 import com.kh.dto.BoardDTO;
+import com.kh.dto.BoardFileDTO;
 import com.kh.dto.BoardMemberDTO;
 import com.kh.service.BoardService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -62,6 +65,24 @@ public class BoardController {
   @GetMapping("/write/view")
   public String boardView() {
       return "board_write_view";
+  }
+  
+  @PostMapping("/write")
+  public String boardWrite(BoardDTO board, HttpSession session, @RequestParam(value = "file", required = false) MultipartFile[] files) {
+      //1. 사용자가 작성한 게시글 제목, 내용, 파일 받아옴
+      //2. 작성자는 세션에서 아이디만 가져옴
+      String id = ((BoardMemberDTO)session.getAttribute("user")).getId();
+      board.setId(id);
+      //3. 게시글 새번호 받아옴
+      int bno = boardService.selectBoardNo();
+      board.setBno(bno);
+      //4. 파일 업로드
+      List<BoardFileDTO> fileList = new ArrayList<>();
+      
+      //5. 게시글 데이터베이스에 추가
+      boardService.insertBoard(board, fileList);
+
+      return "redirect:/board/" + board.getBno();
   }
   
 
