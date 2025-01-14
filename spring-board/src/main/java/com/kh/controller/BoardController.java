@@ -1,5 +1,7 @@
 package com.kh.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -68,7 +70,7 @@ public class BoardController {
   }
   
   @PostMapping("/write")
-  public String boardWrite(BoardDTO board, HttpSession session, @RequestParam(value = "file", required = false) MultipartFile[] files) {
+  public String boardWrite(BoardDTO board, HttpSession session, @RequestParam(value = "file", required = false) MultipartFile[] files) throws IllegalStateException, IOException {
       //1. 사용자가 작성한 게시글 제목, 내용, 파일 받아옴
       //2. 작성자는 세션에서 아이디만 가져옴
       String id = ((BoardMemberDTO)session.getAttribute("user")).getId();
@@ -78,7 +80,25 @@ public class BoardController {
       board.setBno(bno);
       //4. 파일 업로드
       List<BoardFileDTO> fileList = new ArrayList<>();
-      
+      File root = new File("C:\\fileupload");
+      //해당 경로가 있는지 체크, 없으면 해당 경로를 생성
+      if(!root.exists()){
+        root.mkdirs();
+      }
+      for(MultipartFile file : files){
+        //업로드한 파일명
+        String fileName = file.getOriginalFilename();
+        //파일 저장할 경로 완성
+        String filePath = root + File.separator + fileName;
+        //실제 파일 저장 부분
+        file.transferTo(new File(filePath));
+        BoardFileDTO fileDTO = new BoardFileDTO();
+        fileDTO.setBno(bno);
+        fileDTO.setFpath(filePath);
+        fileList.add(fileDTO);        
+      }
+
+
       //5. 게시글 데이터베이스에 추가
       boardService.insertBoard(board, fileList);
 
