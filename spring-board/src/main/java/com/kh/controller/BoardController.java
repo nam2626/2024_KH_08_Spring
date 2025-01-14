@@ -56,9 +56,11 @@ public class BoardController {
 
     BoardDTO board = boardService.selectBoard(bno);
     List<BoardCommentDTO> commentList = boardService.getCommentList(bno, 1);
+    List<BoardFileDTO> fileList = boardService.getBoardFileList(bno);
 
     view.addObject("board", board);
     view.addObject("commentList", commentList);
+    view.addObject("fileList", fileList);
     view.setViewName("board_view");
 
     return view;

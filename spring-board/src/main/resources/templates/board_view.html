@@ -318,7 +318,15 @@
 	 	</tr>
 		 
 		 <tr>
-		 	
+		 	<!-- 
+				첨부파일 목록을 출력
+			 	다운로드 경로 : /board/download/파일번호
+			-->
+			<td colspan="2">
+				<p th:each="file : ${fileList }">
+					<a th:href="@{/board/download/{fno}(fno=${file.fno})}">[[${file.fileName}]]</a>
+				</p>
+			</td>
 		 </tr>
 		 
 		 <tr>
