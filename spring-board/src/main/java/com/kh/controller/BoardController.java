@@ -59,6 +59,13 @@ public class BoardController {
     return view;
   }
   
+  @GetMapping("/write/view")
+  public String boardView() {
+      return "board_write_view";
+  }
+  
+
+
   @ResponseBody
   @GetMapping("/like/{bno}")
   public Map<String, Object> boardLike(@PathVariable int bno, HttpSession session) {
