@@ -222,6 +222,20 @@ public class BoardController {
       return "redirect:/main";
   }
   
+  @GetMapping("/update/view")
+  public ModelAndView boardUpdateView(int bno, ModelAndView view) {
+    BoardDTO board = boardService.selectBoard(bno);
+    view.addObject("board", board);
+    view.setViewName("board_update_view");
+    return view;
+  }
+
+  @PostMapping("/update")
+  public String updateBoard(BoardDTO board) {
+      boardService.updateBoard(board);
+      return "redirect:/board/" + board.getBno();
+  }
+  
 
   @PostMapping("/comment")
   public String boardCommentWrite(BoardCommentDTO comment, HttpSession session, HttpServletResponse response) {
