@@ -1,7 +1,11 @@
 package com.kh.controller;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -109,6 +113,35 @@ public class BoardController {
       boardService.insertBoard(board, fileList);
 
       return "redirect:/board/" + board.getBno();
+  }
+  
+  @GetMapping("/download/{fno}")
+  public void fileDownload(@PathVariable int fno, HttpServletResponse response) throws IOException {
+      //1. 파일 정보 DB로부터 읽어옴
+      String filePath = boardService.selectFilePath(fno);
+      //2. 스트림으로 파일 연결해서, 클라이언트에게 전송
+      File file = new File(filePath);
+      String encodingFileName = URLEncoder.encode(file.getName(), StandardCharsets.UTF_8);
+      response.setHeader("Content-Disposition",
+					"attachement;filename="+encodingFileName);
+			response.setHeader("Content-Transfer-Encoding", "binary");
+			response.setContentLength((int)file.length());
+
+      try(FileInputStream fis = new FileInputStream(file);
+          BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())){
+            
+            byte[] buffer = new byte[1024 * 1024];
+
+            while(true){
+              int count = fis.read(buffer);
+              if(count == -1){
+                break;
+              }
+              bos.write(buffer, 0, count);
+              bos.flush();
+            }
+            
+      }
   }
   
 
