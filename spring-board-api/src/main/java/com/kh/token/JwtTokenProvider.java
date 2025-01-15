@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.kh.dto.BoardMemberDTO;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 @Component
@@ -23,14 +24,35 @@ public class JwtTokenProvider {
 	public String generateJwtToken(BoardMemberDTO member) {
 		Date expire = new Date(Calendar.getInstance().getTimeInMillis() + expiredTime);
 		
-		return Jwts.builder().header().add(createHeader());
+		return Jwts.builder().header().add(createHeader()).and()
+				.setExpiration(expire).setClaims(createClaims(member))
+				.subject(member.getId()).signWith(key).compact();
+	}
+	
+	//토큰에 저장된 로그인 id값 꺼내서 반환
+	public String getUserIDFromToken(String token) {
+		return (String) getClaims(token).get("userId");
+	}
+	//토큰에 저장된 권한에 관련된 값 꺼내서 반환
+	public String getRoleFromToken(String token) {
+		return (String) getClaims(token).get("roles");
+	}
+	
+	private Claims getClaims(String token) {
+		return Jwts.parser().verifyWith(key).build().parseClaimsJws(token).getBody();
+	}
+	
+	private Map<String, Object> createClaims(BoardMemberDTO member) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", member.getId());
+		map.put("roles", member.getGrade() == 5 ? "Admin" : "User");
+		return map;
 	}
 	private Map<String, Object> createHeader() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("typ", "JWT");//토큰 종류
 		map.put("alg", "HS256");//암호화에 사용할 알고리즘
 		map.put("regDate", System.currentTimeMillis());//생성시간
-		
 		return map;
 	}
 }
