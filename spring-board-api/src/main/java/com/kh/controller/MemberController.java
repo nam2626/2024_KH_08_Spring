@@ -38,7 +38,6 @@ public class MemberController {
 			String token = tokenProvider.generateJwtToken(member);
 			flag = true;
 			result.put("token", token);
-			result.put("id", id);
 		}
 		result.put("flag", flag);
 		
