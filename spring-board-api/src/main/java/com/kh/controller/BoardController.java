@@ -76,8 +76,7 @@ public class BoardController {
 	}
 
 	@GetMapping("/board/like/{bno}")
-	public Map<String, Object> boardLike(@PathVariable int bno,
-			@RequestHeader("Authorization") String token) {
+	public Map<String, Object> boardLike(@PathVariable int bno, @RequestHeader("Authorization") String token) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		token = token != null ? token.replace("Bearer ", "") : null;
 		if (token == null) {
@@ -98,9 +97,9 @@ public class BoardController {
 		}
 		return map;
 	}
+
 	@GetMapping("/board/hate/{bno}")
-	public Map<String, Object> boardHate(@PathVariable int bno,
-			@RequestHeader("Authorization") String token) {
+	public Map<String, Object> boardHate(@PathVariable int bno, @RequestHeader("Authorization") String token) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		token = token != null ? token.replace("Bearer ", "") : null;
 		if (token == null) {
@@ -118,6 +117,56 @@ public class BoardController {
 				map.put("msg", "해당 게시글에 싫어요를 취소 하셨습니다.");
 			}
 			map.put("count", boardService.getBoardHate(bno));
+		}
+		return map;
+	}
+
+	@GetMapping("/board/comment/like/{cno}")
+	public Map<String, Object> boardCommentLike(@PathVariable int cno, 
+			@RequestHeader("Authorization") String token) {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		token = token != null ? token.replace("Bearer ", "") : null;
+		if (token == null) {
+			map.put("code", 2);
+			map.put("msg", "로그인 하셔야 이용하실수 있습니다.");
+		} else {
+			String id = tokenProvider.getUserIDFromToken(token);
+			try {
+				boardService.insertBoardCommentLike(cno, id);
+				map.put("code", 1);
+				map.put("msg", "해당 댓글에 좋아요 하셨습니다.");
+			} catch (Exception e) {
+				boardService.deleteBoardCommentLike(cno, id);
+				map.put("code", 1);
+				map.put("msg", "해당 댓글에 좋아요를 취소 하셨습니다.");
+			}
+			map.put("count", boardService.selectCommentLikeCount(cno));
+		}
+		return map;
+	}
+
+	@GetMapping("/board/comment/hate/{cno}")
+	public Map<String, Object> boardCommentHate(@PathVariable int cno, 
+			@RequestHeader("Authorization") String token) {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		token = token != null ? token.replace("Bearer ", "") : null;
+		if (token == null) {
+			map.put("code", 2);
+			map.put("msg", "로그인 하셔야 이용하실수 있습니다.");
+		} else {
+			String id = tokenProvider.getUserIDFromToken(token);
+			try {
+				boardService.insertBoardCommentHate(cno, id);
+				map.put("code", 1);
+				map.put("msg", "해당 댓글에 싫어요 하셨습니다.");
+			} catch (Exception e) {
+				boardService.deleteBoardCommentHate(cno, id);
+				map.put("code", 1);
+				map.put("msg", "해당 댓글에 싫어요를 취소 하셨습니다.");
+			}
+			map.put("count", boardService.selectCommentHateCount(cno));
 		}
 		return map;
 	}
