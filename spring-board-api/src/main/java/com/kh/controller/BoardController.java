@@ -9,8 +9,10 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -221,4 +223,44 @@ public class BoardController {
 		}
 		return map;
 	}
+	@PutMapping("/board/comment")
+    public Map<String, Object> boardCommentUpdate(@RequestBody Map<String, String> body, @RequestHeader("Authorization") String token) {
+      Map<String, Object> map = new HashMap<String, Object>();
+      BoardCommentDTO comment = boardService.selectComment(Integer.parseInt(body.get("cno")));
+  	  token = token != null ? token.replace("Bearer ", "") : null;
+
+      if(token != null && tokenProvider.getUserIDFromToken(token)
+				.equals(comment.getId())){
+        comment.setContent(body.get("content"));
+        boardService.updateBoardComment(comment);
+        map.put("code", 1);
+        map.put("msg", "해당 댓글 수정 완료");
+        map.put("commentList", boardService.getCommentList(comment.getBno(), 1));
+      }else{
+        map.put("code", 2);
+        map.put("msg", "해당 댓글 작성자만 수정이 가능합니다.");
+      }
+      return map;
+    }
+	
+	@DeleteMapping("/board/comment/{cno}")
+    public Map<String, Object> boardCommentDelete(@PathVariable int cno, @RequestHeader("Authorization") String token) {
+      Map<String, Object> map = new HashMap<String, Object>();
+      BoardCommentDTO comment = boardService.selectComment(cno);
+  	  token = token != null ? token.replace("Bearer ", "") : null;
+
+      if(token != null && tokenProvider.getUserIDFromToken(token)
+				.equals(comment.getId())){
+        boardService.deleteBoardComment(cno);
+        map.put("code", 1);
+        map.put("msg", "해당 댓글 삭제 완료");
+        map.put("commentList", boardService.getCommentList(comment.getBno(), 1));
+      }else{
+        map.put("code", 2);
+        map.put("msg", "해당 댓글 작성자만 삭제가 가능합니다.");
+      }
+      return map;
+    }
 }
+
+
