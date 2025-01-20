@@ -16,10 +16,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.dto.BoardCommentDTO;
 import com.kh.dto.BoardDTO;
 import com.kh.dto.BoardFileDTO;
@@ -77,6 +82,40 @@ public class BoardController {
 		return map;
 	}
 
+//	@PostMapping("/board/write")
+//	public Map<String, Object> boardWrite(
+//			@RequestHeader("Authorization") String token,
+//			@RequestPart("title") String title,
+//			@RequestPart("content") String content){
+//		Map<String, Object> map = new HashMap<>();
+//		token = token != null ? token.replace("Bearer ", "") : null;
+//		System.out.println(token);
+//		System.out.println(tokenProvider.getUserIDFromToken(token));
+//		System.out.println(title);
+//		System.out.println(content);
+//		
+//		map.put("msg", "테스트 메세지");
+//		return map;		
+//	}
+	@PostMapping("/board/write")
+	public Map<String, Object> boardWrite(
+			@RequestHeader("Authorization") String token,
+			@RequestPart("params") String params) throws JsonMappingException, JsonProcessingException{
+		Map<String, Object> map = new HashMap<>();
+		token = token != null ? token.replace("Bearer ", "") : null;
+		System.out.println(token);
+		System.out.println(tokenProvider.getUserIDFromToken(token));
+		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, String> paramsMap 
+		= objectMapper.readValue(params, 
+				new TypeReference<Map<String, String>>(){});
+		System.out.println(paramsMap.get("title"));
+		System.out.println(paramsMap.get("content"));
+		
+		map.put("msg", "테스트 메세지");
+		return map;		
+	}
+	
 	@GetMapping("/board/comment/{bno}")
 	public List<BoardCommentDTO> getMethodName(@PathVariable int bno, @RequestParam int start) {
 		List<BoardCommentDTO> commentList = boardService.getCommentList(bno, start);
