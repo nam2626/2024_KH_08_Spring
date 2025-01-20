@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -100,7 +101,8 @@ public class BoardController {
 	@PostMapping("/board/write")
 	public Map<String, Object> boardWrite(
 			@RequestHeader("Authorization") String token,
-			@RequestPart("params") String params) throws JsonMappingException, JsonProcessingException{
+			@RequestPart("params") String params,
+			@RequestPart(value = "file", required = false) MultipartFile[] files) throws JsonMappingException, JsonProcessingException{
 		Map<String, Object> map = new HashMap<>();
 		token = token != null ? token.replace("Bearer ", "") : null;
 		System.out.println(token);
