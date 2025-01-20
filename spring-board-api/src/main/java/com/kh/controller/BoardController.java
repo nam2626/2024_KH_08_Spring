@@ -1,6 +1,8 @@
 package com.kh.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,9 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.dto.BoardCommentDTO;
 import com.kh.dto.BoardDTO;
@@ -99,25 +99,62 @@ public class BoardController {
 //		return map;		
 //	}
 	@PostMapping("/board/write")
-	public Map<String, Object> boardWrite(
-			@RequestHeader("Authorization") String token,
-			@RequestPart("params") String params,
-			@RequestPart(value = "file", required = false) MultipartFile[] files) throws JsonMappingException, JsonProcessingException{
+	public Map<String, Object> boardWrite(@RequestHeader("Authorization") String token,
+			@RequestPart("params") String params, @RequestPart(value = "file", required = false) MultipartFile[] files)
+			throws IllegalStateException, IOException {
 		Map<String, Object> map = new HashMap<>();
 		token = token != null ? token.replace("Bearer ", "") : null;
 		System.out.println(token);
 		System.out.println(tokenProvider.getUserIDFromToken(token));
 		ObjectMapper objectMapper = new ObjectMapper();
-		Map<String, String> paramsMap 
-		= objectMapper.readValue(params, 
-				new TypeReference<Map<String, String>>(){});
+		Map<String, String> paramsMap = objectMapper.readValue(params, new TypeReference<Map<String, String>>() {
+		});
 		System.out.println(paramsMap.get("title"));
 		System.out.println(paramsMap.get("content"));
-		
-		map.put("msg", "테스트 메세지");
-		return map;		
+
+		BoardDTO board = new BoardDTO();
+		board.setId(tokenProvider.getUserIDFromToken(token));
+		board.setTitle(paramsMap.get("title"));
+		board.setContent(paramsMap.get("content"));
+
+		int bno = boardService.selectBoardNo();
+		board.setBno(bno);
+
+		// 4. 파일 업로드
+		List<BoardFileDTO> fileList = new ArrayList<>();
+		File root = new File("C:\\fileupload");
+		// 해당 경로가 있는지 체크, 없으면 해당 경로를 생성
+		if (!root.exists()) {
+			root.mkdirs();
+		}
+		for (MultipartFile file : files) {
+			// 파일 업로드 전에 검사
+			if (file.isEmpty()) {
+				continue;
+			}
+			// 업로드한 파일명
+			String fileName = file.getOriginalFilename();
+			// 파일 저장할 경로 완성
+			String filePath = root + File.separator + fileName;
+			// 실제 파일 저장 부분
+			file.transferTo(new File(filePath));
+			BoardFileDTO fileDTO = new BoardFileDTO();
+			fileDTO.setBno(bno);
+			fileDTO.setFpath(filePath);
+			fileList.add(fileDTO);
+		}
+
+		// 5. 게시글 데이터베이스에 추가
+		int count = boardService.insertBoard(board, fileList);
+		if(count != 0) {
+			map.put("bno", bno);
+			map.put("msg","게시글 쓰기 성공");
+		}else {
+			map.put("msg","게시글 쓰기 실패");
+		}
+		return map;
 	}
-	
+
 	@GetMapping("/board/comment/{bno}")
 	public List<BoardCommentDTO> getMethodName(@PathVariable int bno, @RequestParam int start) {
 		List<BoardCommentDTO> commentList = boardService.getCommentList(bno, start);
@@ -243,8 +280,7 @@ public class BoardController {
 	public Map<String, Object> boardDelete(@PathVariable int bno, @RequestHeader("Authorization") String token) {
 		Map<String, Object> map = new HashMap<>();
 		token = token != null ? token.replace("Bearer ", "") : null;
-		if (token != null && tokenProvider.getUserIDFromToken(token)
-				.equals(boardService.selectBoard(bno).getId())) {
+		if (token != null && tokenProvider.getUserIDFromToken(token).equals(boardService.selectBoard(bno).getId())) {
 			// 첨부파일 삭제
 			// 1. 파일 목록 받아옴
 			List<BoardFileDTO> fileList = boardService.getBoardFileList(bno);
@@ -264,44 +300,42 @@ public class BoardController {
 		}
 		return map;
 	}
+
 	@PutMapping("/board/comment")
-    public Map<String, Object> boardCommentUpdate(@RequestBody Map<String, String> body, @RequestHeader("Authorization") String token) {
-      Map<String, Object> map = new HashMap<String, Object>();
-      BoardCommentDTO comment = boardService.selectComment(Integer.parseInt(body.get("cno")));
-  	  token = token != null ? token.replace("Bearer ", "") : null;
+	public Map<String, Object> boardCommentUpdate(@RequestBody Map<String, String> body,
+			@RequestHeader("Authorization") String token) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		BoardCommentDTO comment = boardService.selectComment(Integer.parseInt(body.get("cno")));
+		token = token != null ? token.replace("Bearer ", "") : null;
 
-      if(token != null && tokenProvider.getUserIDFromToken(token)
-				.equals(comment.getId())){
-        comment.setContent(body.get("content"));
-        boardService.updateBoardComment(comment);
-        map.put("code", 1);
-        map.put("msg", "해당 댓글 수정 완료");
-        map.put("commentList", boardService.getCommentList(comment.getBno(), 1));
-      }else{
-        map.put("code", 2);
-        map.put("msg", "해당 댓글 작성자만 수정이 가능합니다.");
-      }
-      return map;
-    }
-	
+		if (token != null && tokenProvider.getUserIDFromToken(token).equals(comment.getId())) {
+			comment.setContent(body.get("content"));
+			boardService.updateBoardComment(comment);
+			map.put("code", 1);
+			map.put("msg", "해당 댓글 수정 완료");
+			map.put("commentList", boardService.getCommentList(comment.getBno(), 1));
+		} else {
+			map.put("code", 2);
+			map.put("msg", "해당 댓글 작성자만 수정이 가능합니다.");
+		}
+		return map;
+	}
+
 	@DeleteMapping("/board/comment/{cno}")
-    public Map<String, Object> boardCommentDelete(@PathVariable int cno, @RequestHeader("Authorization") String token) {
-      Map<String, Object> map = new HashMap<String, Object>();
-      BoardCommentDTO comment = boardService.selectComment(cno);
-  	  token = token != null ? token.replace("Bearer ", "") : null;
+	public Map<String, Object> boardCommentDelete(@PathVariable int cno, @RequestHeader("Authorization") String token) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		BoardCommentDTO comment = boardService.selectComment(cno);
+		token = token != null ? token.replace("Bearer ", "") : null;
 
-      if(token != null && tokenProvider.getUserIDFromToken(token)
-				.equals(comment.getId())){
-        boardService.deleteBoardComment(cno);
-        map.put("code", 1);
-        map.put("msg", "해당 댓글 삭제 완료");
-        map.put("commentList", boardService.getCommentList(comment.getBno(), 1));
-      }else{
-        map.put("code", 2);
-        map.put("msg", "해당 댓글 작성자만 삭제가 가능합니다.");
-      }
-      return map;
-    }
+		if (token != null && tokenProvider.getUserIDFromToken(token).equals(comment.getId())) {
+			boardService.deleteBoardComment(cno);
+			map.put("code", 1);
+			map.put("msg", "해당 댓글 삭제 완료");
+			map.put("commentList", boardService.getCommentList(comment.getBno(), 1));
+		} else {
+			map.put("code", 2);
+			map.put("msg", "해당 댓글 작성자만 삭제가 가능합니다.");
+		}
+		return map;
+	}
 }
-
-
