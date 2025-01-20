@@ -29,11 +29,8 @@ public class BoardService {
 	}
 
 	public int insertBoard(BoardDTO dto, List<BoardFileDTO> fList) {
-			int bno = mapper.selectBoardNo();
-			dto.setBno(bno);
 			int count = mapper.insertBoard(dto);
 			fList.forEach(item -> {
-				item.setBno(bno);
 				mapper.insertBoardFile(item);
 			});
 			return count;
