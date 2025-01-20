@@ -104,16 +104,22 @@ public class BoardController {
 			throws IllegalStateException, IOException {
 		Map<String, Object> map = new HashMap<>();
 		token = token != null ? token.replace("Bearer ", "") : null;
-		System.out.println(token);
-		System.out.println(tokenProvider.getUserIDFromToken(token));
+//		System.out.println(token);
+//		System.out.println(tokenProvider.getUserIDFromToken(token));
 		ObjectMapper objectMapper = new ObjectMapper();
 		Map<String, String> paramsMap = objectMapper.readValue(params, new TypeReference<Map<String, String>>() {
 		});
 		System.out.println(paramsMap.get("title"));
 		System.out.println(paramsMap.get("content"));
-
+		
 		BoardDTO board = new BoardDTO();
-		board.setId(tokenProvider.getUserIDFromToken(token));
+		try {
+			board.setId(tokenProvider.getUserIDFromToken(token));
+		}catch (Exception e) {
+			map.put("msg", "로그인 하셔야 이용하실수 있습니다.");
+			map.put("code", 2);
+			return map;
+		}
 		board.setTitle(paramsMap.get("title"));
 		board.setContent(paramsMap.get("content"));
 
@@ -127,29 +133,33 @@ public class BoardController {
 		if (!root.exists()) {
 			root.mkdirs();
 		}
-		for (MultipartFile file : files) {
-			// 파일 업로드 전에 검사
-			if (file.isEmpty()) {
-				continue;
+		if(files != null) {
+			for (MultipartFile file : files) {
+				// 파일 업로드 전에 검사
+				if (file.isEmpty()) {
+					continue;
+				}
+				// 업로드한 파일명
+				String fileName = file.getOriginalFilename();
+				// 파일 저장할 경로 완성
+				String filePath = root + File.separator + fileName;
+				// 실제 파일 저장 부분
+				file.transferTo(new File(filePath));
+				BoardFileDTO fileDTO = new BoardFileDTO();
+				fileDTO.setBno(bno);
+				fileDTO.setFpath(filePath);
+				fileList.add(fileDTO);
 			}
-			// 업로드한 파일명
-			String fileName = file.getOriginalFilename();
-			// 파일 저장할 경로 완성
-			String filePath = root + File.separator + fileName;
-			// 실제 파일 저장 부분
-			file.transferTo(new File(filePath));
-			BoardFileDTO fileDTO = new BoardFileDTO();
-			fileDTO.setBno(bno);
-			fileDTO.setFpath(filePath);
-			fileList.add(fileDTO);
 		}
 
 		// 5. 게시글 데이터베이스에 추가
 		int count = boardService.insertBoard(board, fileList);
 		if(count != 0) {
 			map.put("bno", bno);
+			map.put("code", 1);
 			map.put("msg","게시글 쓰기 성공");
 		}else {
+			map.put("code", 2);
 			map.put("msg","게시글 쓰기 실패");
 		}
 		return map;
