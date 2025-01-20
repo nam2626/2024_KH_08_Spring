@@ -1,13 +1,22 @@
 package com.kh.controller;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -111,11 +120,11 @@ public class BoardController {
 		});
 		System.out.println(paramsMap.get("title"));
 		System.out.println(paramsMap.get("content"));
-		
+
 		BoardDTO board = new BoardDTO();
 		try {
 			board.setId(tokenProvider.getUserIDFromToken(token));
-		}catch (Exception e) {
+		} catch (Exception e) {
 			map.put("msg", "로그인 하셔야 이용하실수 있습니다.");
 			map.put("code", 2);
 			return map;
@@ -133,7 +142,7 @@ public class BoardController {
 		if (!root.exists()) {
 			root.mkdirs();
 		}
-		if(files != null) {
+		if (files != null) {
 			for (MultipartFile file : files) {
 				// 파일 업로드 전에 검사
 				if (file.isEmpty()) {
@@ -154,15 +163,55 @@ public class BoardController {
 
 		// 5. 게시글 데이터베이스에 추가
 		int count = boardService.insertBoard(board, fileList);
-		if(count != 0) {
+		if (count != 0) {
 			map.put("bno", bno);
 			map.put("code", 1);
-			map.put("msg","게시글 쓰기 성공");
-		}else {
+			map.put("msg", "게시글 쓰기 성공");
+		} else {
 			map.put("code", 2);
-			map.put("msg","게시글 쓰기 실패");
+			map.put("msg", "게시글 쓰기 실패");
 		}
 		return map;
+	}
+
+	@GetMapping("/board/download/{fno}")
+	public ResponseEntity<Resource> fileDownload(@PathVariable int fno, HttpServletResponse response) throws IOException {
+		// 1. 파일 정보 DB로부터 읽어옴
+		String filePath = boardService.selectFilePath(fno);
+		// 2. 스트림으로 파일 연결해서, 클라이언트에게 전송
+		File file = new File(filePath);
+		String encodingFileName = URLEncoder.encode(file.getName(), StandardCharsets.UTF_8);
+		Resource resource = new FileSystemResource(file);
+		String contentDisposition 
+				= "attachement;filename=" + encodingFileName;
+		
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
+				.header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+				.body(resource);
+		
+		/*
+		//초기 파일 다운로드
+		response.setHeader("Content-Disposition", 
+				"attachement;filename=" + encodingFileName);
+		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setContentLength((int) file.length());
+
+		try (FileInputStream fis = new FileInputStream(file);
+				BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
+
+			byte[] buffer = new byte[1024 * 1024];
+
+			while (true) {
+				int count = fis.read(buffer);
+				if (count == -1) {
+					break;
+				}
+				bos.write(buffer, 0, count);
+				bos.flush();
+			}
+
+		}
+		*/
 	}
 
 	@GetMapping("/board/comment/{bno}")
