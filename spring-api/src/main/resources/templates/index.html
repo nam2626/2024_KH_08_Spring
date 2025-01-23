@@ -10,6 +10,14 @@
 			then(response => response.text()).
 			then(txt => {
 				console.log(txt);
+				const xml = new DOMParser().parseFromString(txt,'text/xml');
+				console.log(xml);
+				let tag = '';
+				xml.querySelectorAll('item').forEach(item => {
+					tag += `<p>시/도 : ${item.querySelector('gubun').innerHTML}</p>`
+					tag += `<p>감염자수 : ${item.querySelector('defCnt').innerHTML}</p>`
+				})
+				document.querySelector('#container').innerHTML = tag;
 			});
 		}
 	}
