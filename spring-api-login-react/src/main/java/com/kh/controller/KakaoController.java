@@ -4,13 +4,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
-import jakarta.servlet.http.HttpSession;
 
 @CrossOrigin(allowedHeaders = "*", origins = "*")
 @RestController
@@ -55,6 +55,49 @@ public class KakaoController {
 		String res = requestKakaoServer(apiURL, header);
 		System.out.println(res);
 		return res;
+	}
+
+	@GetMapping("/kakao/logout")
+	public Map<String, Object> logout(@RequestHeader("Authorization") String token) {
+		Map<String, Object>	map = new HashMap<>();
+		System.out.println("kakao logout "+token);
+		String apiURL = "https://kapi.kakao.com/v1/user/logout";
+		String res = requestPostKakaoServer(apiURL, token);
+		map.put("res", res);
+		return map;
+	}
+
+	public String requestPostKakaoServer(String apiURL, String header) {
+		StringBuffer res = new StringBuffer();
+		try {
+			URL url = new URL(apiURL);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("POST");
+			con.setDoOutput(true);
+			if (header != null && !header.equals("")) {
+				con.setRequestProperty("Authorization", header);
+			}
+
+			int responseCode = con.getResponseCode();
+			BufferedReader br;
+			System.out.print("responseCode=" + responseCode);
+			if (responseCode == 200) { // 정상 호출
+				br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			} else { // 에러 발생
+				br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+			}
+			String inputLine;
+			while ((inputLine = br.readLine()) != null) {
+				res.append(inputLine);
+			}
+			br.close();
+			if (responseCode == 200) {
+				System.out.println(res.toString());
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return res.toString();
 	}
 	
 	public String requestKakaoServer(String apiURL, String header) {
